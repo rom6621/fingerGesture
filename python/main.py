@@ -75,19 +75,23 @@ def recognition(image, landmarks):
   # 親指先と人差し指第2関節の距離
   f11 = np.linalg.norm(np.array(landmarks[4])-np.array(landmarks[6]))
 
+  gestureName = ""
+
   if f1>f2 and f1>f3 and f1>f4 and f1>f5:
     if f11>52 and landmarks[3][1]-landmarks[4][1]>0:
-      cv2.putText(image, "Good" , (10, 210), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
+      gestureName = "Good"
     elif f11>52:
-      cv2.putText(image, "Bad" , (10, 210), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
+      gestureName = "Bad"
     else:
-      cv2.putText(image, "Rock" , (10, 210), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
+      gestureName = "Rock"
   elif f1>f6 and f2>f7 and f3>f8 and f4>f9 and f5>f10:
-    cv2.putText(image, "Paper" , (10, 210), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
+      gestureName = "Paper"
   elif f2>f7 and f3>f8 and f4<f9 and f5<f10:
-    cv2.putText(image, "Scissors" , (10, 210), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
+    gestureName = "Scissors"
   elif f2<f7 and f3>f8 and f4<f9 and f5<f10:
-    cv2.putText(image, "Fuxx" , (10, 210), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
+    gestureName = "Fuxx"
+
+  cv2.putText(image, gestureName, (10, 210), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
 
 def main():
   # カメラ映像の取得
@@ -105,7 +109,7 @@ def main():
       recognition(image, landmarks)
 
     # 描画結果を画面に表示
-    cv2.imshow('Demo', image)
+    cv2.imshow("Demo", image)
     # Escapeが入力された場合終了
     key = cv2.waitKey(1)
     if key == 27:
