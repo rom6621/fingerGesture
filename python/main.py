@@ -2,14 +2,15 @@ import cv2
 import numpy as np
 import mediapipe as mp
 
+# MediaPipeインスタンス生成
+hands = mp.solutions.hands.Hands(
+  max_num_hands=1,
+  min_detection_confidence=0.7,
+  min_tracking_confidence=0.5,
+)
+
 # ランドマーク座標の取得を行う関数
 def getLandmarks(image):
-  # MediaPipeインスタンス生成
-  hands = mp.solutions.hands.Hands(
-    max_num_hands=1,
-    min_detection_confidence=0.7,
-    min_tracking_confidence=0.5,
-  )
   # 映像から手を識別
   results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
   if results.multi_hand_landmarks is not None:
