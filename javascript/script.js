@@ -24,6 +24,7 @@ async function readyCapture() {
 }
 
 function getDistance(ary1, ary2) {
+  console.log(ary2);
   return Math.sqrt( Math.pow( ary2[0]-ary1[0], 2 ) + Math.pow( ary2[1]-ary1[1], 2 ) ) ;
 }
 
@@ -39,10 +40,9 @@ async function processVideo() {
     const landmarks = [];
     for(let i=0; i<predictions[0].landmarks.length; i++) {
       const landmark = predictions[0].landmarks[i];
-      landmarks.push((landmark[0], landmark[1]))
+      landmarks.push([landmark[0], landmark[1]])
       cv.circle(dst, new cv.Point(landmark[0], landmark[1]), 5, new cv.Scalar(255, 255, 0), 2)
     }
-    console.log(landmarks[0]);
     const f1 = getDistance(landmarks[0], landmarks[4]);
     const f2 = getDistance(landmarks[0], landmarks[8]);
     const f3 = getDistance(landmarks[0], landmarks[12]);
@@ -54,22 +54,26 @@ async function processVideo() {
     const f9 = getDistance(landmarks[0], landmarks[14]);
     const f10 = getDistance(landmarks[0], landmarks[18]);
     const f11 = getDistance(landmarks[4], landmarks[6]);
+
+    let gestureName = "";
     if (f1>f2 && f1>f3 && f1>f4 && f1>f5) {
       if (f11>52 && landmarks[3][1]-landmarks[4][1]>0) {
-        cv.putText(dst, "Good" , new cv.Point(10, 210), cv.FONT_HERSHEY_SIMPLEX, 1.0, new cv.Scalar(0, 255, 255), 2, cv.LINE_AA);
+        gestureName = "Good";
       } else if(f11>52){
-        cv.putText(dst, "Bad" , new cv.Point(10, 210), cv.FONT_HERSHEY_SIMPLEX, 1.0, new cv.Scalar(0, 255, 255), 2, cv.LINE_AA);
+        gestureName = "Bad";
       } else{
-        cv.putText(dst, "Rock" , new cv.Point(10, 210), cv.FONT_HERSHEY_SIMPLEX, 1.0, new cv.Scalar(0, 255, 255), 2, cv.LINE_AA);
+        gestureName = "Rock";
       }
     } else if(f1>f6 && f2>f7 && f3>f8 && f4>f9 && f5>f10) {
-      cv.putText(dst, "Paper" , new cv.Point(10, 210), cv.FONT_HERSHEY_SIMPLEX, 1.0, new cv.Scalar(0, 255, 255), 2, cv.LINE_AA);
+      gestureName = "Paper";
     } else if(f2>f7 && f3>f8 && f4<f9 && f5<f10){
-      cv.putText(dst, "Scissors" , new cv.Point(10, 210), cv.FONT_HERSHEY_SIMPLEX, 1.0, new cv.Scalar(0, 255, 255), 2, cv.LINE_AA);
+      gestureName = "Scissors";
     } else if(f2<f7 && f3>f8 && f4<f9 && f5<f10){
-      cv.putText(dst, "Fuxx" , new cv.Point(10, 210), cv.FONT_HERSHEY_SIMPLEX, 1.0, new cv.Scalar(0, 255, 255), 2, cv.LINE_AA);
+      gestureName = "Fuxx"
     }
   }
+
+  cv.putText(dst, gestureName , new cv.Point(10, 210), cv.FONT_HERSHEY_SIMPLEX, 1.0, new cv.Scalar(0, 255, 255), 2, cv.LINE_AA);
 
   cv.imshow("output", dst);
   setTimeout(processVideo, 0);
