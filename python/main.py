@@ -90,8 +90,16 @@ def recognition(image, landmarks):
   if f1>f2 and f1>f3 and f1>f4 and f1>f5:
     if f11>52 and f12>10 and f13>0 and f14>0 and f15>0:
       gestureName = "Good"
+      image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+      image[:, :, (0)] = 0
+      image[:, :, (1)] = 180
+      image = cv2.cvtColor(image, cv2.COLOR_HSV2BGR)
     elif f11>52 and f12<0 and f13<0 and f14<0 and f15<0:
       gestureName = "Bad"
+      image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+      image[:, :, (0)] = 0
+      image[:, :, (1)] = 180
+      image = cv2.cvtColor(image, cv2.COLOR_HSV2BGR)
     else:
       gestureName = "Rock"
   elif f1>f6 and f2>f7 and f3>f8 and f4>f9 and f5>f10:
@@ -99,9 +107,12 @@ def recognition(image, landmarks):
   elif f2>f7 and f3>f8 and f4<f9 and f5<f10:
     gestureName = "Scissors"
   elif f2<f7 and f3>f8 and f4<f9 and f5<f10:
+    small = cv2.resize(image, None, fx=0.1, fy=0.1, interpolation=cv2.INTER_NEAREST)
+    image = cv2.resize(small, image.shape[:2][::-1], interpolation=cv2.INTER_NEAREST)
     gestureName = "Fuxx"
 
   cv2.putText(image, gestureName, (10, 210), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
+  return image
 
 def main():
   # カメラ映像の取得
@@ -117,7 +128,7 @@ def main():
     if landmarks != None:
       # ポイントと線を描画
       drawPoint(image, landmarks)
-      recognition(image, landmarks)
+      image = recognition(image, landmarks)
 
     # 描画結果を画面に表示
     cv2.imshow("Demo", image)
