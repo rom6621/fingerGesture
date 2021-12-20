@@ -75,13 +75,21 @@ def recognition(image, landmarks):
   f10 = np.linalg.norm(np.array(landmarks[0])-np.array(landmarks[18]))
   # 親指先と人差し指第2関節の距離
   f11 = np.linalg.norm(np.array(landmarks[4])-np.array(landmarks[6]))
+  # 親指の付け根と手首のY座標の距離
+  f12 = landmarks[3][1] - landmarks[4][1]
+  # 手首と手首真ん中のY座標の距離
+  f13 = landmarks[2][1] - landmarks[3][1]
+  # 人差し指指先と人差し指第1関節のY座標の距離
+  f14 = landmarks[1][1] - landmarks[2][1]
+  # 人差し指の第1関数と人差し指の第2関数のY座標の距離
+  f15 = landmarks[0][1] - landmarks[1][1]
 
   gestureName = ""
 
   if f1>f2 and f1>f3 and f1>f4 and f1>f5:
-    if f11>52 and landmarks[3][1]-landmarks[4][1]>0:
+    if f12>10 and f13>0 and f14>0 and f15>0:
       gestureName = "Good"
-    elif f11>52:
+    elif f12<0 and f13<0 and f14<0 and f15<0:
       gestureName = "Bad"
     else:
       gestureName = "Rock"
@@ -100,6 +108,7 @@ def main():
   while True:
     # カメラ映像の読み込み
     ret, image = cap.read()
+    image = cv2.flip(image, 1)
 
     # ランドマーク座標の取得
     landmarks = getLandmarks(image)
