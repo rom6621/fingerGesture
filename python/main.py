@@ -52,6 +52,7 @@ def drawPoint(image, landmarks):
   cv2.line(image, landmarks[13], landmarks[17], (0, 255, 0), 2)
   cv2.line(image, landmarks[17], landmarks[0], (0, 255, 0), 2)
 
+# ポーズの認識
 def recognition(image, landmarks):
   # 親指先と手首の距離
   f1 = np.linalg.norm(np.array(landmarks[0])-np.array(landmarks[4]))
@@ -87,9 +88,9 @@ def recognition(image, landmarks):
   gestureName = ""
 
   if f1>f2 and f1>f3 and f1>f4 and f1>f5:
-    if f12>10 and f13>0 and f14>0 and f15>0:
+    if f11>52 and f12>10 and f13>0 and f14>0 and f15>0:
       gestureName = "Good"
-    elif f12<0 and f13<0 and f14<0 and f15<0:
+    elif f11>52 and f12<0 and f13<0 and f14<0 and f15<0:
       gestureName = "Bad"
     else:
       gestureName = "Rock"
